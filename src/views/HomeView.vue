@@ -1,8 +1,8 @@
 <template>
     <main>
         <button id="big-red-button" @click="randomize()">Click Me!</button>
-        <template v-if="randomized">
-            <div id="labels">
+        <template v-if="showRandomAction">
+            <div class="labels cols">
                 <div class="label">
                     <h1>Place the {{ animal.name }}</h1>
                 </div>
@@ -10,12 +10,25 @@
                     <h1>{{ action.name }}</h1>
                 </div>
             </div>
-            <div id="images">
+            <div class="images cols">
                 <div class="img">
                     <img :src="getImgUrl(animal.icon)" />
                 </div>
                 <div class="img">
                     <img :src="getImgUrl(action.icon)" />
+                </div>
+            </div>
+        </template>
+        <template v-if="showZookeeper">
+            <div class="labels">
+                <div class="label">
+                    <h1>Zookeeper!</h1>
+                    <h2>Return all animals to their positions</h2>
+                </div>
+            </div>
+            <div class="images">
+                <div class="img">
+                    <img :src="getImgUrl('zookeeper')" />
                 </div>
             </div>
         </template>
@@ -32,11 +45,14 @@ function getImgUrl(fileName) {
 
 console.log(getImgUrl('arctic'));
 
-const randomized = ref(false);
+const showRandomAction = ref(false);
+const showZookeeper = ref(false);
 const animal = ref(null);
 const action = ref(null);
 let lastAnimalRnd = 9999;
 let lastActionRnd = 9999;
+let actionsSinceLastZookeeper = 0;
+let zookeeperOdds = 0;
 
 let animals = [
     {
@@ -141,33 +157,48 @@ if (
 let documentElement = document.documentElement;
 
 function randomize() {
-    let animalRnd = lastAnimalRnd;
-
-    while (animalRnd == lastAnimalRnd) {
-        animalRnd = Math.floor(Math.random() * animals.length);
+    if (actionsSinceLastZookeeper >= 3) {
+        zookeeperOdds = zookeeperOdds + Math.random() / 2;
     }
-    lastAnimalRnd = animalRnd;
-    animal.value = animals[animalRnd];
 
-    let actionRnd = lastActionRnd;
-    while (actionRnd == lastActionRnd || actionRnd == animalRnd) {
-        actionRnd = Math.floor(Math.random() * actions.length);
-    }
-    lastActionRnd = actionRnd;
-    action.value = actions[actionRnd];
+    if (zookeeperOdds < 1) {
+        let animalRnd = lastAnimalRnd;
 
-    randomized.value = true;
-
-    if (isMobile) {
-        if (documentElement.requestFullscreen) {
-            documentElement.requestFullscreen();
-        } else if (documentElement.webkitRequestFullscreen) {
-            /* Safari */
-            documentElement.webkitRequestFullscreen();
-        } else if (documentElement.msRequestFullscreen) {
-            /* IE11 */
-            documentElement.msRequestFullscreen();
+        while (animalRnd == lastAnimalRnd) {
+            animalRnd = Math.floor(Math.random() * animals.length);
         }
+        lastAnimalRnd = animalRnd;
+        animal.value = animals[animalRnd];
+
+        let actionRnd = lastActionRnd;
+        while (actionRnd == lastActionRnd || actionRnd == animalRnd) {
+            actionRnd = Math.floor(Math.random() * actions.length);
+        }
+        lastActionRnd = actionRnd;
+        action.value = actions[actionRnd];
+
+        showZookeeper.value = false;
+        showRandomAction.value = true;
+        actionsSinceLastZookeeper++;
+
+        if (isMobile) {
+            if (documentElement.requestFullscreen) {
+                documentElement.requestFullscreen();
+            } else if (documentElement.webkitRequestFullscreen) {
+                /* Safari */
+                documentElement.webkitRequestFullscreen();
+            } else if (documentElement.msRequestFullscreen) {
+                /* IE11 */
+                documentElement.msRequestFullscreen();
+            }
+        }
+    } else {
+        console.log(`zookeeper actions ${actionsSinceLastZookeeper}`);
+        actionsSinceLastZookeeper = 0;
+        zookeeperOdds = 0;
+
+        showRandomAction.value = false;
+        showZookeeper.value = true;
     }
 }
 </script>
@@ -198,10 +229,13 @@ main {
         flex: 0 0 100px;
     }
 
-    #labels {
+    .labels {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
         width: 100%;
+
+        &.cols {
+            grid-template-columns: repeat(2, 1fr);
+        }
 
         .label {
             display: flex;
@@ -210,20 +244,23 @@ main {
             justify-content: flex-end;
 
             height: 100px;
+            padding: 1rem;
             h1 {
                 text-align: center;
-                padding: 1rem;
             }
         }
     }
 
-    #images {
+    .images {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
         width: 100%;
         flex-grow: 0;
 
         overflow: hidden;
+
+        &.cols {
+            grid-template-columns: repeat(2, 1fr);
+        }
 
         .img {
             padding: 1rem;
