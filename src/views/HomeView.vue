@@ -1,16 +1,24 @@
 <template>
     <main>
         <button id="big-red-button" @click="randomize()">Click Me!</button>
-        <div id="result" v-if="randomized">
-            <div class="result-section">
-                <h2>Place the {{ animal.name }}</h2>
-                <img :src="getImgUrl(animal.icon)" />
+        <template v-if="randomized">
+            <div id="labels">
+                <div class="label">
+                    <h1>Place the {{ animal.name }}</h1>
+                </div>
+                <div class="label">
+                    <h1>{{ action.name }}</h1>
+                </div>
             </div>
-            <div class="result-section">
-                <h2>{{ action.name }}</h2>
-                <img :src="getImgUrl(action.icon)" />
+            <div id="images">
+                <div class="img">
+                    <img :src="getImgUrl(animal.icon)" />
+                </div>
+                <div class="img">
+                    <img :src="getImgUrl(action.icon)" />
+                </div>
             </div>
-        </div>
+        </template>
     </main>
 </template>
 
@@ -133,38 +141,88 @@ function randomize() {
     action.value = actions[actionRnd];
 
     randomized.value = true;
+
+    var elem = document.documentElement;
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) {
+        /* Safari */
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+        /* IE11 */
+        elem.msRequestFullscreen();
+    }
 }
 </script>
 
 <style scoped lang="scss">
 main {
+    height: 100%;
+    // border: 4px solid green;
+
+    // display: grid;
+    // grid-template-columns: repeat(2, 1fr);
+    // grid-auto-rows: 1fr;
+    // gap: 1rem;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 1rem;
-
-    padding: 1rem;
 
     #big-red-button {
-        width: 90%;
-        height: 15%;
+        width: 100%;
+        // height: 100px;
         background-color: $ss-color-dan;
         color: $ss-color-white;
         font-size: 2.5rem;
+
+        // grid-column: 1 / 3;
+        flex: 0 0 100px;
     }
 
-    #result {
+    #labels {
         display: grid;
-        width: 90%;
         grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+        width: 100%;
 
-        .result-section {
+        .label {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: flex-end;
+
+            height: 100px;
+            h1 {
+                text-align: center;
+                padding: 1rem;
+            }
+        }
+    }
+
+    #images {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+        flex-grow: 0;
+
+        overflow: hidden;
+
+        .img {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                // width: auto;
+                // height: auto;
+                object-fit: contain;
+            }
         }
     }
 }

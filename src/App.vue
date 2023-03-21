@@ -11,17 +11,17 @@
       </nav>
     </div>
   </header> -->
-    <header>
+    <!-- <header>
         <h2>Zoo On The Loose</h2>
-    </header>
+    </header> -->
 
     <RouterView />
-    <footer>
+    <!-- <footer>
         <div>
             Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from
             <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
         </div>
-    </footer>
+    </footer> -->
 </template>
 
 <script setup>
@@ -34,8 +34,8 @@ import { RouterLink, RouterView } from 'vue-router';
     width: 100%;
     background: $background;
 
-    display: grid;
-    grid-template-rows: 40px auto 40px;
+    // display: grid;
+    // grid-template-rows: 40px auto 40px;
 
     header,
     footer {
