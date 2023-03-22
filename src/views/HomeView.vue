@@ -138,6 +138,34 @@ let actions = [
         name: 'By a Window',
         icon: 'window',
     },
+    {
+        name: 'In a Box',
+        icon: 'box',
+    },
+    {
+        name: 'On a Table',
+        icon: 'table',
+    },
+    // {
+    //     name: 'Someplace Hot',
+    //     icon: 'sun',
+    // },
+    // {
+    //     name: 'Someplace Cold',
+    //     icon: 'snowflakes',
+    // },
+    {
+        name: 'Near a Shoe',
+        icon: 'sneakers',
+    },
+    {
+        name: 'In a Drawer',
+        icon: 'drawer',
+    },
+    {
+        name: 'By a Door',
+        icon: 'door',
+    },
 ];
 
 let isMobile = false;
