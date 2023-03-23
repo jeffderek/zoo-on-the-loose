@@ -44,8 +44,8 @@ import { RouterLink, RouterView } from 'vue-router';
         align-items: center;
         justify-content: center;
 
-        background: $ss-color-zed;
-        color: $ss-color-white;
+        //background: #000;
+        //color: #FFF;
     }
 }
 </style>

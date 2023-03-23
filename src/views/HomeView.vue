@@ -1,6 +1,6 @@
 <template>
     <main>
-        <button id="big-red-button" @click="randomize()">Click Me!</button>
+        <button id="big-red-button" @pointerup="randomize()">Click Me!</button>
         <template v-if="showRandomAction">
             <div class="labels cols">
                 <div class="label">
@@ -249,12 +249,16 @@ main {
     #big-red-button {
         width: 100%;
         // height: 100px;
-        background-color: $ss-color-dan;
-        color: $ss-color-white;
-        font-size: 2.5rem;
+        background-color: $color-red-30;
+        color: $color-white;
+        font-size: 3rem;
 
         // grid-column: 1 / 3;
-        flex: 0 0 100px;
+        flex: 0 0 150px;
+
+        &:active {
+            background-color: $color-red-40;
+        }
     }
 
     .labels {
