@@ -49,6 +49,7 @@ const showRandomAction = ref(false);
 const showZookeeper = ref(false);
 const animal = ref(null);
 const action = ref(null);
+const allowBigRedButtonPress = ref(true);
 let lastAnimalRnd = 9999;
 let lastActionRnd = 9999;
 let actionsSinceLastZookeeper = 0;
