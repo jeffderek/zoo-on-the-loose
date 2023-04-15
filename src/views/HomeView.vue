@@ -1,6 +1,8 @@
 <template>
     <main>
-        <button id="big-red-button" @pointerup="randomize()">Click Me!</button>
+        <button id="big-red-button" @pointerup="randomize()" :class="{ disabled: !allowBigRedButtonPress }">
+            {{ allowBigRedButtonPress ? 'Click Me!' : '' }}
+        </button>
         <template v-if="showRandomAction">
             <div class="labels cols">
                 <div class="label">
@@ -186,48 +188,56 @@ if (
 let documentElement = document.documentElement;
 
 function randomize() {
-    if (actionsSinceLastZookeeper >= 3) {
-        zookeeperOdds = zookeeperOdds + Math.random() / 2;
-    }
-
-    if (zookeeperOdds < 1) {
-        let animalRnd = lastAnimalRnd;
-
-        while (animalRnd == lastAnimalRnd) {
-            animalRnd = Math.floor(Math.random() * animals.length);
+    if (allowBigRedButtonPress.value) {
+        if (actionsSinceLastZookeeper >= 3) {
+            zookeeperOdds = zookeeperOdds + Math.random() / 2;
         }
-        lastAnimalRnd = animalRnd;
-        animal.value = animals[animalRnd];
 
-        let actionRnd = lastActionRnd;
-        while (actionRnd == lastActionRnd || actionRnd == animalRnd) {
-            actionRnd = Math.floor(Math.random() * actions.length);
-        }
-        lastActionRnd = actionRnd;
-        action.value = actions[actionRnd];
+        if (zookeeperOdds < 1) {
+            let animalRnd = lastAnimalRnd;
 
-        showZookeeper.value = false;
-        showRandomAction.value = true;
-        actionsSinceLastZookeeper++;
-
-        if (isMobile) {
-            if (documentElement.requestFullscreen) {
-                documentElement.requestFullscreen();
-            } else if (documentElement.webkitRequestFullscreen) {
-                /* Safari */
-                documentElement.webkitRequestFullscreen();
-            } else if (documentElement.msRequestFullscreen) {
-                /* IE11 */
-                documentElement.msRequestFullscreen();
+            while (animalRnd == lastAnimalRnd) {
+                animalRnd = Math.floor(Math.random() * animals.length);
             }
-        }
-    } else {
-        console.log(`zookeeper actions ${actionsSinceLastZookeeper}`);
-        actionsSinceLastZookeeper = 0;
-        zookeeperOdds = 0;
+            lastAnimalRnd = animalRnd;
+            animal.value = animals[animalRnd];
 
-        showRandomAction.value = false;
-        showZookeeper.value = true;
+            let actionRnd = lastActionRnd;
+            while (actionRnd == lastActionRnd || actionRnd == animalRnd) {
+                actionRnd = Math.floor(Math.random() * actions.length);
+            }
+            lastActionRnd = actionRnd;
+            action.value = actions[actionRnd];
+
+            showZookeeper.value = false;
+            showRandomAction.value = true;
+            actionsSinceLastZookeeper++;
+
+            if (isMobile) {
+                if (documentElement.requestFullscreen) {
+                    documentElement.requestFullscreen();
+                } else if (documentElement.webkitRequestFullscreen) {
+                    /* Safari */
+                    documentElement.webkitRequestFullscreen();
+                } else if (documentElement.msRequestFullscreen) {
+                    /* IE11 */
+                    documentElement.msRequestFullscreen();
+                }
+            }
+        } else {
+            console.log(`zookeeper actions ${actionsSinceLastZookeeper}`);
+            actionsSinceLastZookeeper = 0;
+            zookeeperOdds = 0;
+
+            showRandomAction.value = false;
+            showZookeeper.value = true;
+        }
+
+        allowBigRedButtonPress.value = false;
+        setTimeout(() => {
+            allowBigRedButtonPress.value = true;
+        }, 3000);
+    } else {
     }
 }
 </script>
@@ -257,8 +267,13 @@ main {
         // grid-column: 1 / 3;
         flex: 0 0 150px;
 
-        &:active {
+        &:active:not(.disabled) {
             background-color: $color-red-40;
+        }
+
+        &.disabled {
+            opacity: 0.6;
+            cursor: default;
         }
     }
 
