@@ -1,9 +1,8 @@
 <template>
     <main>
-        <button id="big-red-button" @pointerup="randomize()" :class="{ disabled: !allowBigRedButtonPress }">
-            {{ allowBigRedButtonPress ? 'Click Me!' : '' }}
-        </button>
-        <template v-if="showRandomAction">
+        <template
+            v-if="showRandomAction"
+            class="content">
             <div class="labels cols">
                 <div class="label">
                     <h1>Place the {{ animal.name }}</h1>
@@ -34,10 +33,21 @@
                 </div>
             </div>
         </template>
+        <div
+            v-else
+            class="content"></div>
+        <button
+            id="big-red-button"
+            @pointerup="randomize()"
+            :class="{ disabled: !allowBigRedButtonPress }">
+            {{ allowBigRedButtonPress ? 'Click Me!' : '' }}
+            <LoadingSpinner v-if="!allowBigRedButtonPress" />
+        </button>
     </main>
 </template>
 
 <script setup>
+import LoadingSpinner from "@/components/LoadingSpinner.vue"
 import { ref, onMounted } from 'vue';
 
 function getImgUrl(fileName) {
@@ -81,6 +91,10 @@ let animals = [
 ];
 
 let actions = [
+    {
+        name: 'Anywhere you want',
+        icon: 'question',
+    },
     {
         name: 'Near the Zebra',
         icon: 'zebra',
@@ -168,6 +182,18 @@ let actions = [
     {
         name: 'By a Door',
         icon: 'door',
+    },
+    {
+        name: 'Near a Book',
+        icon: 'book',
+    },
+    {
+        name: 'Near some Blocks',
+        icon: 'blocks',
+    },
+    {
+        name: 'Near a Ball',
+        icon: 'ball',
     },
 ];
 
@@ -257,6 +283,11 @@ main {
     align-items: center;
     justify-content: flex-start;
 
+    .content {
+        flex: 1;
+        padding-bottom: 30px;
+    }
+
     #big-red-button {
         width: 100%;
         // height: 100px;
@@ -291,7 +322,7 @@ main {
             align-items: center;
             justify-content: flex-end;
 
-            height: 100px;
+            // height: 100px;
             padding: 1rem;
             h1 {
                 text-align: center;
